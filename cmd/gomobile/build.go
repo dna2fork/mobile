@@ -73,11 +73,13 @@ func runBuild(cmd *command) (err error) {
 // runBuildImpl builds a package for mobiles based on the given commands.
 // runBuildImpl returns a built package information and an error if exists.
 func runBuildImpl(cmd *command) (*packages.Package, error) {
+	fmt.Println("start building process ...")
 	cleanup, err := buildEnvInit()
 	if err != nil {
 		return nil, err
 	}
 	defer cleanup()
+	fmt.Println("complete to set up environment ...")
 
 	args := cmd.flag.Args()
 
@@ -112,6 +114,7 @@ func runBuildImpl(cmd *command) (*packages.Package, error) {
 		return nil, fmt.Errorf("cannot set -o when building non-main package")
 	}
 
+	fmt.Println("target os:", targetOS)
 	var nmpkgs map[string]bool
 	switch targetOS {
 	case "android":
@@ -123,6 +126,7 @@ func runBuildImpl(cmd *command) (*packages.Package, error) {
 			}
 			return pkg, nil
 		}
+		fmt.Println("build:", pkg.Name, targetArchs)
 		nmpkgs, err = goAndroidBuild(pkg, targetArchs)
 		if err != nil {
 			return nil, err
@@ -142,6 +146,7 @@ func runBuildImpl(cmd *command) (*packages.Package, error) {
 		if buildBundleID == "" {
 			return nil, fmt.Errorf("-target=ios requires -bundleid set")
 		}
+		fmt.Println("build:", pkg.Name, targetArchs)
 		nmpkgs, err = goIOSBuild(pkg, buildBundleID, targetArchs)
 		if err != nil {
 			return nil, err

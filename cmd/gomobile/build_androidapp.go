@@ -31,6 +31,8 @@ func goAndroidBuild(pkg *packages.Package, androidArchs []string) (map[string]bo
 	}
 	appName := path.Base(pkg.PkgPath)
 	libName := androidPkgName(appName)
+	// "org.golang.todo." + libName
+	fmt.Println("android app:", appName, libName)
 
 	// TODO(hajimehoshi): This works only with Go tools that assume all source files are in one directory.
 	// Fix this to work with other Go tools.
